@@ -12,6 +12,11 @@ const app = new Hono();
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 app.use('*', async (c, next) => {
+  c.env = {
+    ...(typeof process !== 'undefined' ? process.env : {}),
+    ...c.env,
+  };
+
   const allowedOrigins = (c.env.ALLOWED_ORIGINS || 'http://localhost:5173')
     .split(',')
     .map((o) => o.trim());

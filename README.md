@@ -23,7 +23,7 @@ It also features a protected **Admin Panel** to search, filter, paginate, view, 
 ### Backend
 - **Platform**: Cloudflare Workers
 - **Framework**: Hono.js
-- **Database**: MongoDB Atlas (MongoDB Node Driver v6 with Worker `nodejs_compat`)
+- **Database**: Cloudflare D1 (SQLite)
 - **Image Storage**: Cloudinary (Signed REST API)
 - **Auth**: JWT stored in HTTP-Only, Secure, SameSite cookies
 
@@ -87,8 +87,8 @@ unity-a-live-group/
 
 ## 🔑 Environment Variables & Setup
 
-### 1. Worker Setup (`worker/wrangler.toml`)
-Non-secret configuration is stored in `worker/wrangler.toml`:
+### 1. Backend Setup (`worker`)
+Configure the Worker variables in `worker/wrangler.toml` and secrets with `wrangler secret put`:
 
 ```toml
 name = "unity-a-live-group-api"
@@ -100,11 +100,11 @@ compatibility_flags = ["nodejs_compat"]
 MONGODB_DATABASE = "unity_a_live_group"
 MONGODB_COLLECTION = "registrations"
 CLOUDINARY_CLOUD_NAME = "pplcot0h"
-PUBLIC_BASE_URL = "http://localhost:5173"
-ALLOWED_ORIGINS = "http://localhost:5173,http://localhost:4173"
+PUBLIC_BASE_URL = "https://unity-a-live-group.vercel.app"
+ALLOWED_ORIGINS = "https://unity-a-live-group.vercel.app"
 ```
 
-Set Cloudflare Secrets using `wrangler secret put <NAME>`:
+Set these as Cloudflare Worker secrets:
 - `MONGODB_URI`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
@@ -120,7 +120,7 @@ Set Cloudflare Secrets using `wrangler secret put <NAME>`:
 ### 2. Frontend Setup (`frontend/.env`)
 ```env
 VITE_API_URL=https://unity-a-live-group-api.manan-patel-cg.workers.dev
-VITE_PUBLIC_BASE_URL=http://localhost:5173
+VITE_PUBLIC_BASE_URL=https://unity-a-live-group.vercel.app
 ```
 
 ---
@@ -167,6 +167,7 @@ Visit `http://localhost:5173` to view the registration portal.
 ### Cloudflare Workers (Backend)
 ```bash
 cd worker
+npx wrangler d1 migrations apply unity-a-live-group-db --remote
 npx wrangler deploy
 ```
 

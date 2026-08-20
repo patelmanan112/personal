@@ -197,7 +197,7 @@ const IDCard = forwardRef(function IDCard({ member }, ref) {
             SCAN TO VERIFY
           </p>
           <p style={{ fontSize: '10px', color: '#0d1b4b', fontWeight: '600', margin: 0 }}>
-            unityalivegroup.com
+            unity-a-live-group.vercel.app
           </p>
         </div>
         <QRCodeComponent uniqueId={uniqueId} size={72} />
