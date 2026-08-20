@@ -484,7 +484,7 @@ export default function AdminDashboard() {
                   className="btn-primary flex items-center justify-center gap-2 text-sm py-2.5 px-5 flex-1 sm:flex-none shadow-md"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Add Image</span>
+                  <span>Add Photo / Video</span>
                 </button>
               </div>
             </div>
@@ -509,76 +509,97 @@ export default function AdminDashboard() {
             {galleryLoading ? (
               <div className="card text-center py-16 text-gray-400">
                 <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-ualg-blue" />
-                <p className="font-semibold text-gray-600 text-sm">Loading gallery images...</p>
+                <p className="font-semibold text-gray-600 text-sm">Loading gallery media...</p>
               </div>
             ) : galleryImages.length === 0 ? (
               <div className="card text-center py-16 border-2 border-dashed border-gray-200">
                 <ImageIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <h3 className="text-base font-bold text-gray-700 mb-1">No Gallery Images Uploaded</h3>
+                <h3 className="text-base font-bold text-gray-700 mb-1">No Gallery Media Uploaded</h3>
                 <p className="text-gray-400 text-xs max-w-sm mx-auto mb-6">
-                  Click the "Add Image" button above to upload Ganpati celebration photographs.
+                  Click the "Add Photo / Video" button above to upload Ganpati celebration photographs or video moments.
                 </p>
                 <button
                   onClick={() => setShowUploadModal(true)}
                   className="btn-primary inline-flex items-center gap-2 text-sm py-2 px-4"
                 >
-                  <Plus className="w-4 h-4" /> Add First Image
+                  <Plus className="w-4 h-4" /> Add First Media
                 </button>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                {galleryImages.map((img, idx) => (
-                  <div
-                    key={img.id}
-                    className="card p-3 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between border border-gray-100 overflow-hidden"
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative rounded-xl overflow-hidden bg-gray-100 mb-3 aspect-square">
-                      <img
-                        src={img.imageUrl.replace('/image/upload/', '/image/upload/w_500,h_500,c_fill,q_auto,f_auto/')}
-                        alt={img.title || img.originalFilename || `Image ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        onError={(e) => { e.target.src = img.imageUrl; }}
-                      />
-                    </div>
+                {galleryImages.map((item, idx) => {
+                  const isItemVideo = item.mediaType === 'video' || item.imageUrl?.includes('/video/');
+                  let thumbSrc = item.imageUrl;
+                  if (isItemVideo && item.imageUrl?.includes('/video/upload/')) {
+                    thumbSrc = item.imageUrl.replace('/video/upload/', '/video/upload/so_0,w_500,h_500,c_fill,q_auto,f_jpg/').replace(/\.[^/.]+$/, '.jpg');
+                  } else if (item.imageUrl?.includes('/image/upload/')) {
+                    thumbSrc = item.imageUrl.replace('/image/upload/', '/image/upload/w_500,h_500,c_fill,q_auto,f_auto/');
+                  }
 
-                    {/* Metadata */}
-                    <div className="mb-3 px-1">
-                      <p className="font-bold text-gray-800 text-xs truncate" title={img.title || img.originalFilename}>
-                        {img.title || img.originalFilename || `Ganpati Image #${img.id}`}
-                      </p>
-                      <div className="flex items-center justify-between text-[11px] text-gray-400 mt-1">
-                        <span>
-                          {img.createdAt ? new Date(img.createdAt).toLocaleDateString('en-IN', {
-                            day: '2-digit', month: 'short', year: 'numeric'
-                          }) : '—'}
-                        </span>
-                        {img.fileSize && <span>{formatFileSize(img.fileSize)}</span>}
+                  return (
+                    <div
+                      key={item.id}
+                      className="card p-3 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between border border-gray-100 overflow-hidden"
+                    >
+                      {/* Thumbnail */}
+                      <div className="relative rounded-xl overflow-hidden bg-slate-900 mb-3 aspect-square flex items-center justify-center">
+                        <img
+                          src={thumbSrc}
+                          alt={item.title || item.originalFilename || `Item ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            if (isItemVideo) e.target.style.opacity = '0.3';
+                          }}
+                        />
+
+                        {/* Type badge */}
+                        <div className="absolute top-2 left-2 z-10">
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md shadow-sm ${
+                            isItemVideo ? 'bg-amber-500 text-slate-900' : 'bg-blue-600 text-white'
+                          }`}>
+                            {isItemVideo ? '🎬 Video' : '📷 Photo'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Metadata */}
+                      <div className="mb-3 px-1">
+                        <p className="font-bold text-gray-800 text-xs truncate" title={item.title || item.originalFilename}>
+                          {item.title || item.originalFilename || `Ganpati Item #${item.id}`}
+                        </p>
+                        <div className="flex items-center justify-between text-[11px] text-gray-400 mt-1">
+                          <span>
+                            {item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-IN', {
+                              day: '2-digit', month: 'short', year: 'numeric'
+                            }) : '—'}
+                          </span>
+                          {item.fileSize && <span>{formatFileSize(item.fileSize)}</span>}
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
+                        <button
+                          onClick={() => downloadGalleryImage(item.imageUrl, getDownloadFilename(item, idx))}
+                          className="flex-1 btn-outline py-1.5 px-2 text-xs flex items-center justify-center gap-1"
+                          title="Download file"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Download</span>
+                        </button>
+
+                        <button
+                          onClick={() => setDeleteGalleryTarget(item)}
+                          className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+                          title="Delete media"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
-                      <button
-                        onClick={() => downloadGalleryImage(img.imageUrl, getDownloadFilename(img, idx))}
-                        className="flex-1 btn-outline py-1.5 px-2 text-xs flex items-center justify-center gap-1"
-                        title="Download image"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Download</span>
-                      </button>
-
-                      <button
-                        onClick={() => setDeleteGalleryTarget(img)}
-                        className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
-                        title="Delete image"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -624,7 +645,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* ── Gallery Image Delete Confirm Modal ─────────────────────────────── */}
+      {/* ── Gallery Media Delete Confirm Modal ─────────────────────────────── */}
       {deleteGalleryTarget && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true">
           <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full">
@@ -633,22 +654,32 @@ export default function AdminDashboard() {
                 <Trash2 className="w-5 h-5 text-red-500" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-800">Delete Image?</h3>
+                <h3 className="font-bold text-gray-800">
+                  Delete {deleteGalleryTarget.mediaType === 'video' ? 'Video' : 'Photo'}?
+                </h3>
                 <p className="text-xs text-gray-500">ID #{deleteGalleryTarget.id}</p>
               </div>
             </div>
 
-            {/* Thumbnail preview in modal */}
-            <div className="rounded-xl overflow-hidden bg-gray-100 mb-4 max-h-36 flex items-center justify-center border border-gray-200">
-              <img
-                src={deleteGalleryTarget.imageUrl}
-                alt="Preview"
-                className="max-h-36 object-contain"
-              />
+            {/* Thumbnail or Video preview in delete modal */}
+            <div className="rounded-xl overflow-hidden bg-gray-900 mb-4 max-h-36 flex items-center justify-center border border-gray-200">
+              {deleteGalleryTarget.mediaType === 'video' || deleteGalleryTarget.imageUrl?.includes('/video/') ? (
+                <video
+                  src={deleteGalleryTarget.imageUrl}
+                  className="max-h-36 object-contain"
+                  controls
+                />
+              ) : (
+                <img
+                  src={deleteGalleryTarget.imageUrl}
+                  alt="Preview"
+                  className="max-h-36 object-contain"
+                />
+              )}
             </div>
 
             <p className="text-gray-600 text-sm mb-2">
-              Are you sure you want to permanently delete this image from the Ganpati Gallery?
+              Are you sure you want to permanently delete this from the Ganpati Gallery?
             </p>
             <p className="text-xs text-red-500 mb-6">
               This action cannot be undone. The database record and Cloudinary asset will be removed.

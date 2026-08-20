@@ -1,25 +1,49 @@
 // frontend/src/gallery/utils/imageValidation.js
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ALLOWED_VIDEO_TYPES = [
+  'video/mp4',
+  'video/webm',
+  'video/quicktime',
+  'video/x-matroska',
+  'video/ogg',
+];
+
+const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
 
 /**
- * Validates a File for gallery upload.
+ * Validates a File for gallery upload (image or video).
  * Returns null if valid, or an error string if invalid.
  */
-export function validateGalleryImage(file) {
-  if (!file) return 'Please select an image file.';
+export function validateGalleryMedia(file) {
+  if (!file) return 'Please select a photo or video file.';
 
-  const type = file.type?.toLowerCase();
-  if (!ALLOWED_TYPES.includes(type)) {
-    return 'Invalid file type. Please select a JPG, JPEG, PNG, or WEBP image.';
+  const type = file.type?.toLowerCase() || '';
+  const isImage = ALLOWED_IMAGE_TYPES.includes(type);
+  const isVideo = ALLOWED_VIDEO_TYPES.includes(type) || type.startsWith('video/');
+
+  if (!isImage && !isVideo) {
+    return 'Invalid file type. Supported formats: JPG, JPEG, PNG, WEBP for photos, and MP4, WEBM, MOV for videos.';
   }
 
-  if (file.size > MAX_SIZE_BYTES) {
-    return `File is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum allowed size is 5 MB.`;
+  const maxSize = isVideo ? MAX_VIDEO_SIZE_BYTES : MAX_IMAGE_SIZE_BYTES;
+  const maxLabel = isVideo ? '50 MB' : '10 MB';
+
+  if (file.size > maxSize) {
+    return `File is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum allowed size for ${isVideo ? 'videos' : 'photos'} is ${maxLabel}.`;
   }
 
   return null;
+}
+
+// Alias for backward compatibility
+export const validateGalleryImage = validateGalleryMedia;
+
+export function isVideoFile(file) {
+  if (!file) return false;
+  const type = file.type?.toLowerCase() || '';
+  return ALLOWED_VIDEO_TYPES.includes(type) || type.startsWith('video/') || /\.(mp4|webm|mov|mkv|avi|m4v)$/i.test(file.name);
 }
 
 export function formatFileSize(bytes) {

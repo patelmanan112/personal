@@ -1,8 +1,8 @@
 // frontend/src/gallery/pages/Gallery.jsx
-// Main landing page for UNITY A LIVE GROUP — Ganpati Gallery
+// Main landing page for UNITY A LIVE GROUP — Ganpati Photo & Video Gallery
 
 import { useEffect, useState, useCallback } from 'react';
-import { RefreshCw, AlertCircle, Sparkles } from 'lucide-react';
+import { RefreshCw, AlertCircle, Sparkles, Image as ImageIcon, Film, LayoutGrid } from 'lucide-react';
 import Navbar from '../../components/Navbar.jsx';
 import GalleryHero from '../components/GalleryHero.jsx';
 import GalleryGrid from '../components/GalleryGrid.jsx';
@@ -19,8 +19,9 @@ export default function Gallery() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [total, setTotal] = useState(0);
+  const [mediaFilter, setMediaFilter] = useState('all'); // 'all' | 'image' | 'video'
 
-  const loadGalleryData = useCallback(async (pageNum = 1, append = false) => {
+  const loadGalleryData = useCallback(async (pageNum = 1, append = false, filter = 'all') => {
     if (append) {
       setLoadingMore(true);
     } else {
@@ -29,7 +30,10 @@ export default function Gallery() {
     setError('');
 
     try {
-      const res = await fetchGallery({ page: pageNum, limit: 20 });
+      const params = { page: pageNum, limit: 20 };
+      if (filter !== 'all') params.type = filter;
+
+      const res = await fetchGallery(params);
       if (res.success) {
         if (append) {
           setImages((prev) => [...prev, ...(res.data || [])]);
@@ -51,13 +55,18 @@ export default function Gallery() {
   }, []);
 
   useEffect(() => {
-    loadGalleryData(1, false);
-  }, [loadGalleryData]);
+    loadGalleryData(1, false, mediaFilter);
+  }, [loadGalleryData, mediaFilter]);
 
   const handleLoadMore = () => {
     if (!loadingMore && hasMore) {
-      loadGalleryData(page + 1, true);
+      loadGalleryData(page + 1, true, mediaFilter);
     }
+  };
+
+  const handleFilterChange = (newFilter) => {
+    if (newFilter === mediaFilter) return;
+    setMediaFilter(newFilter);
   };
 
   return (
@@ -69,7 +78,7 @@ export default function Gallery() {
 
       {/* Gallery Section */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-gray-200 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-gray-200 gap-4">
           <div>
             <div className="flex items-center gap-2 text-ualg-gold font-bold text-xs uppercase tracking-widest mb-1">
               <Sparkles className="w-4 h-4" />
@@ -79,11 +88,45 @@ export default function Gallery() {
               Ganpati Memories
             </h2>
           </div>
-          {total > 0 && !loading && (
-            <span className="text-xs text-gray-500 font-medium bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm self-start sm:self-auto">
-              {total} {total === 1 ? 'Photograph' : 'Photographs'}
-            </span>
-          )}
+
+          {/* Filter Pills */}
+          <div className="flex items-center gap-2 bg-gray-100 p-1.5 rounded-2xl self-start md:self-auto border border-gray-200">
+            <button
+              onClick={() => handleFilterChange('all')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                mediaFilter === 'all'
+                  ? 'bg-white text-ualg-navy shadow-sm'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>All</span>
+            </button>
+
+            <button
+              onClick={() => handleFilterChange('image')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                mediaFilter === 'image'
+                  ? 'bg-white text-ualg-navy shadow-sm'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Photos</span>
+            </button>
+
+            <button
+              onClick={() => handleFilterChange('video')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                mediaFilter === 'video'
+                  ? 'bg-white text-ualg-navy shadow-sm'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <Film className="w-3.5 h-3.5" />
+              <span>Videos</span>
+            </button>
+          </div>
         </div>
 
         {/* Loading State */}
@@ -98,7 +141,7 @@ export default function Gallery() {
             <h3 className="text-lg font-bold text-gray-800 mb-2">Unable to Load Gallery</h3>
             <p className="text-gray-500 text-sm mb-6">{error}</p>
             <button
-              onClick={() => loadGalleryData(1, false)}
+              onClick={() => loadGalleryData(1, false, mediaFilter)}
               className="btn-primary inline-flex items-center gap-2 text-sm"
             >
               <RefreshCw className="w-4 h-4" />
@@ -123,7 +166,7 @@ export default function Gallery() {
                   disabled={loadingMore}
                   className="btn-primary min-w-[180px] text-sm py-3 px-8"
                 >
-                  {loadingMore ? <ButtonLoading text="Loading more..." /> : 'Load More Photographs'}
+                  {loadingMore ? <ButtonLoading text="Loading more..." /> : 'Load More Celebrations'}
                 </button>
               </div>
             )}

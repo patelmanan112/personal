@@ -39,7 +39,7 @@ const mockD1 = {
       },
       async run() {
         if (sql.includes('INSERT INTO gallery_images')) {
-          const [title, image_url, public_id, asset_id, original_filename, file_size] = boundParams;
+          const [title, image_url, public_id, asset_id, original_filename, file_size, media_type] = boundParams;
           const record = {
             id: nextId++,
             title,
@@ -48,6 +48,7 @@ const mockD1 = {
             asset_id,
             original_filename,
             file_size,
+            media_type: media_type || 'image',
             created_at: new Date().toISOString(),
           };
           mockGalleryStore.push(record);

@@ -1,6 +1,6 @@
 // worker/src/services/cloudinary.js
-// Cloudinary image upload using the REST API with signed requests.
-// Works in Cloudflare Workers — no Node.js SDK needed.
+// Cloudinary media upload (Images & Videos) using REST API with signed requests.
+// Works seamlessly in Cloudflare Workers — no Node.js SDK needed.
 
 /**
  * Generates a SHA-1 hex digest using the Web Crypto API.
@@ -28,18 +28,20 @@ async function buildSignature(params, apiSecret) {
  * Returns { secure_url, public_id }.
  */
 export async function uploadToCloudinary(file, env) {
-  return _upload(file, env, 'unity-a-live-group/members');
+  return _upload(file, env, 'unity-a-live-group/members', 'image');
 }
 
 /**
- * Uploads a file to Cloudinary for the Ganpati gallery.
- * Returns { secure_url, public_id, asset_id }.
+ * Uploads an image or video to Cloudinary for the Ganpati gallery.
+ * Automatically determines if file is image or video.
+ * Returns { secure_url, public_id, asset_id, resource_type }.
  */
-export async function uploadToCloudinaryGallery(file, env) {
-  return _upload(file, env, 'unity-a-live-group/ganpati-gallery');
+export async function uploadToCloudinaryGallery(file, env, isVideo = false) {
+  const resourceType = isVideo ? 'video' : 'image';
+  return _upload(file, env, 'unity-a-live-group/ganpati-gallery', resourceType);
 }
 
-async function _upload(file, env, folder) {
+async function _upload(file, env, folder, resourceType = 'image') {
   const cloudName = env.CLOUDINARY_CLOUD_NAME || 'pplcot0h';
   const apiKey = env.CLOUDINARY_API_KEY || '953761345214678';
   const apiSecret = env.CLOUDINARY_API_SECRET || 'tG-Kv7U9n8fPK-juJZXOf9PDL20';
@@ -61,7 +63,7 @@ async function _upload(file, env, folder) {
   formData.append('signature', signature);
   formData.append('folder', folder);
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
 
   const response = await fetch(url, {
     method: 'POST',
@@ -79,13 +81,14 @@ async function _upload(file, env, folder) {
     secure_url: result.secure_url,
     public_id: result.public_id,
     asset_id: result.asset_id || null,
+    resource_type: result.resource_type || resourceType,
   };
 }
 
 /**
- * Deletes an image from Cloudinary by public_id.
+ * Deletes an image or video from Cloudinary by public_id.
  */
-export async function deleteFromCloudinary(publicId, env) {
+export async function deleteFromCloudinary(publicId, env, resourceType = 'image') {
   const cloudName = env.CLOUDINARY_CLOUD_NAME || 'pplcot0h';
   const apiKey = env.CLOUDINARY_API_KEY || '953761345214678';
   const apiSecret = env.CLOUDINARY_API_SECRET || 'tG-Kv7U9n8fPK-juJZXOf9PDL20';
@@ -105,7 +108,8 @@ export async function deleteFromCloudinary(publicId, env) {
   formData.append('timestamp', timestamp);
   formData.append('signature', signature);
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
+  const endpoint = resourceType === 'video' ? 'video' : 'image';
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/${endpoint}/destroy`;
 
   const response = await fetch(url, {
     method: 'POST',
