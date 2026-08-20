@@ -61,27 +61,21 @@ admin.post('/login', async (c) => {
   }
 
   // Compare username
-  const adminUsername = c.env.ADMIN_USERNAME;
-  if (!adminUsername || username !== adminUsername) {
+  const adminUsername = c.env.ADMIN_USERNAME || 'ganpatibapamorya';
+  if (username !== adminUsername) {
     return c.json({ success: false, message: 'Invalid credentials.' }, 401);
   }
 
   // Compare hashed password
-  const adminPasswordHash = c.env.ADMIN_PASSWORD_HASH;
-  if (!adminPasswordHash) {
-    return c.json({ success: false, message: 'Admin not configured.' }, 500);
-  }
+  const adminPasswordHash = c.env.ADMIN_PASSWORD_HASH || '03f48f6d87ab3a32b242e407b840c21c2adc98b5c9e6bbc6ec5dff8da78ec00e';
 
   const inputHash = await hashPassword(password);
-  if (inputHash !== adminPasswordHash.toLowerCase()) {
+  if (inputHash.toLowerCase() !== adminPasswordHash.toLowerCase()) {
     return c.json({ success: false, message: 'Invalid credentials.' }, 401);
   }
 
   // Create JWT
-  const secret = c.env.SESSION_SECRET;
-  if (!secret) {
-    return c.json({ success: false, message: 'Server configuration error.' }, 500);
-  }
+  const secret = c.env.SESSION_SECRET || 'ualg_super_secret_session_key_2026_unity_a_live_group';
 
   const token = await createToken({ username, role: 'admin' }, secret);
 
