@@ -1,0 +1,19 @@
+{
+  "name": "unity-a-live-group-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend API for UNITY A LIVE GROUP Digital ID System",
+  "scripts": {
+    "dev": "node dev-server.js",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.0",
+    "hono": "^4.5.0",
+    "mongodb": "^6.8.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.72.0"
+  }
+}
