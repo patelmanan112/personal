@@ -24,14 +24,25 @@ async function buildSignature(params, apiSecret) {
 }
 
 /**
- * Uploads a file (Blob/File) to Cloudinary.
+ * Uploads a file (Blob/File) to Cloudinary for member profiles.
  * Returns { secure_url, public_id }.
  */
 export async function uploadToCloudinary(file, env) {
+  return _upload(file, env, 'unity-a-live-group/members');
+}
+
+/**
+ * Uploads a file to Cloudinary for the Ganpati gallery.
+ * Returns { secure_url, public_id, asset_id }.
+ */
+export async function uploadToCloudinaryGallery(file, env) {
+  return _upload(file, env, 'unity-a-live-group/ganpati-gallery');
+}
+
+async function _upload(file, env, folder) {
   const cloudName = env.CLOUDINARY_CLOUD_NAME || 'pplcot0h';
   const apiKey = env.CLOUDINARY_API_KEY || '953761345214678';
   const apiSecret = env.CLOUDINARY_API_SECRET || 'tG-Kv7U9n8fPK-juJZXOf9PDL20';
-  const folder = 'unity-a-live-group';
 
   const timestamp = Math.floor(Date.now() / 1000).toString();
 
@@ -67,6 +78,7 @@ export async function uploadToCloudinary(file, env) {
   return {
     secure_url: result.secure_url,
     public_id: result.public_id,
+    asset_id: result.asset_id || null,
   };
 }
 

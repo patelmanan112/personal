@@ -86,4 +86,23 @@ export async function deleteRegistration(uniqueId) {
   return response.data;
 }
 
+// ─── Gallery API ──────────────────────────────────────────────────────────────
+
+export async function getGalleryImages(params = {}) {
+  const response = await api.get('/api/gallery', { params });
+  return response.data;
+}
+
+export async function uploadGalleryImage(formData) {
+  const response = await api.post('/api/admin/gallery/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data;
+}
+
+export async function deleteGalleryImage(id) {
+  const response = await api.delete(`/api/admin/gallery/${id}`);
+  return response.data;
+}
+
 export default api;

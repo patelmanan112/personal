@@ -154,7 +154,7 @@ export default function RegistrationSuccess() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/register')}
             className="btn-outline flex items-center justify-center gap-2 flex-1"
           >
             <ArrowLeft className="w-4 h-4" />

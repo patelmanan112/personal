@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Gallery from './gallery/pages/Gallery.jsx';
 import Registration from './pages/Registration.jsx';
 import RegistrationSuccess from './pages/RegistrationSuccess.jsx';
 import VerifyID from './pages/VerifyID.jsx';
@@ -11,8 +12,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Registration />} />
+        {/* Public Gallery (Primary Landing Page) */}
+        <Route path="/" element={<Gallery />} />
+
+        {/* Member Registration */}
+        <Route path="/register" element={<Registration />} />
+        <Route path="/registration" element={<Navigate to="/register" replace />} />
         <Route path="/registration-success" element={<RegistrationSuccess />} />
         <Route path="/id/:uniqueId" element={<VerifyID />} />
 
@@ -43,7 +48,7 @@ export default function App() {
               <div className="text-center">
                 <h1 className="text-6xl font-black text-ualg-navy mb-4">404</h1>
                 <p className="text-gray-500 mb-6">Page not found.</p>
-                <a href="/" className="btn-primary inline-block">Go Home</a>
+                <a href="/" className="btn-primary inline-block">Go to Gallery</a>
               </div>
             </div>
           }

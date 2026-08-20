@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Backend API for UNITY A LIVE GROUP Digital ID System",
+  "description": "Backend API for UNITY A LIVE GROUP Digital ID and Ganpati Gallery System",
   "scripts": {
     "dev": "node dev-server.js",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply unity-a-live-group-db --local",
+    "migrate:remote": "wrangler d1 migrations apply unity-a-live-group-db --remote"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.0",

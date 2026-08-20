@@ -6,6 +6,7 @@ import { cors } from 'hono/cors';
 import registration from './routes/registration.js';
 import publicRoutes from './routes/public.js';
 import admin from './routes/admin.js';
+import gallery from './routes/gallery.js';
 import { ensureIndexes } from './services/mongodb.js';
 
 const app = new Hono();
@@ -73,6 +74,8 @@ app.get('/api/setup', async (c) => {
 app.route('/api/register', registration);
 app.route('/api/id', publicRoutes);
 app.route('/api/admin', admin);
+app.route('/api/gallery', gallery);
+app.route('/api/admin/gallery', gallery);
 
 // ─── 404 catch-all ────────────────────────────────────────────────────────────
 app.notFound((c) => {

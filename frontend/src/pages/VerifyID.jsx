@@ -165,7 +165,7 @@ export default function VerifyID() {
               <p className="text-xs text-gray-400">
                 Verified by <span className="font-semibold text-ualg-blue">UNITY A LIVE GROUP</span> official portal
               </p>
-              <Link to="/" className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-ualg-blue mt-2 transition-colors">
+              <Link to="/register" className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-ualg-blue mt-2 transition-colors">
                 <ArrowLeft className="w-3 h-3" /> Register as a Member
               </Link>
             </div>
