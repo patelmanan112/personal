@@ -2,7 +2,8 @@
 import { QRCodeSVG } from 'qrcode.react';
 
 export default function QRCodeComponent({ uniqueId, size = 100 }) {
-  const baseUrl = import.meta.env.VITE_PUBLIC_BASE_URL || window.location.origin;
+  // Always use the current frontend domain for the QR code
+  const baseUrl = window.location.origin;
   const verificationUrl = `${baseUrl}/id/${uniqueId}`;
 
   return (
