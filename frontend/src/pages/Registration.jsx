@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus, User, Hash, Phone, Droplets, MapPin, AlertCircle } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
+import Footer from '../components/Footer.jsx';
 import PhotoUpload from '../components/PhotoUpload.jsx';
 import { ButtonLoading } from '../components/Loading.jsx';
 import { registrationSchema, BLOOD_GROUPS } from '../utils/validation.js';
@@ -121,7 +122,7 @@ export default function Registration() {
             </div>
 
             {/* Age + Blood Group row */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="age" className="block text-sm font-semibold text-gray-700 mb-1">
                   Age <span className="text-red-500">*</span>
@@ -247,6 +248,7 @@ export default function Registration() {
           </a>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

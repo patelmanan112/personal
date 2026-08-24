@@ -64,16 +64,16 @@ export default function PhotoUpload({ value, onChange, error }) {
             <button
               type="button"
               onClick={handleRemove}
-              className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-md transition-colors"
+              className="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 active:scale-95"
               aria-label="Remove photo"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           </div>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="text-sm text-ualg-blue hover:text-ualg-navy font-medium flex items-center gap-1 transition-colors"
+            className="text-sm text-ualg-blue hover:text-ualg-navy font-bold flex items-center gap-2 transition-colors py-2 px-4 bg-blue-50 rounded-full mt-1"
           >
             <Camera className="w-4 h-4" />
             Change Photo

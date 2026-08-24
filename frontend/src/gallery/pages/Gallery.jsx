@@ -10,6 +10,7 @@ import GalleryLoader from '../components/GalleryLoader.jsx';
 import GalleryEmpty from '../components/GalleryEmpty.jsx';
 import { fetchGallery } from '../services/galleryApi.js';
 import { ButtonLoading } from '../../components/Loading.jsx';
+import Footer from '../../components/Footer.jsx';
 
 export default function Gallery() {
   const [images, setImages] = useState([]);
@@ -175,12 +176,7 @@ export default function Gallery() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-ualg-navy text-white py-8 border-t border-ualg-blue/30 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-400">
-          <p className="font-semibold text-gray-300 mb-1">UNITY A LIVE GROUP</p>
-          <p>© {new Date().getFullYear()} UNITY A LIVE GROUP. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

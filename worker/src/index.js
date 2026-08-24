@@ -7,6 +7,7 @@ import registration from './routes/registration.js';
 import publicRoutes from './routes/public.js';
 import admin from './routes/admin.js';
 import gallery from './routes/gallery.js';
+import funds from './routes/funds.js';
 import { ensureIndexes } from './services/mongodb.js';
 
 const app = new Hono();
@@ -76,6 +77,7 @@ app.route('/api/id', publicRoutes);
 app.route('/api/admin', admin);
 app.route('/api/gallery', gallery);
 app.route('/api/admin/gallery', gallery);
+app.route('/api/funds', funds);
 
 // ─── 404 catch-all ────────────────────────────────────────────────────────────
 app.notFound((c) => {

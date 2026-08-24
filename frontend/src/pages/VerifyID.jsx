@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, ShieldCheck, ArrowLeft, Droplets, User, Phone, MapPin, Hash, Calendar } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
+import Footer from '../components/Footer.jsx';
 import { PageLoading } from '../components/Loading.jsx';
 import { verifyMemberId } from '../services/api.js';
 
@@ -172,6 +173,7 @@ export default function VerifyID() {
           </>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

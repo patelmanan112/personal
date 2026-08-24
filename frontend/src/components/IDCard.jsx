@@ -29,7 +29,8 @@ const IDCard = forwardRef(function IDCard({ member }, ref) {
     <div
       ref={ref}
       style={{
-        width: '380px',
+        width: '100%',
+        maxWidth: '380px',
         backgroundColor: '#ffffff',
         borderRadius: '16px',
         overflow: 'hidden',
@@ -63,16 +64,18 @@ const IDCard = forwardRef(function IDCard({ member }, ref) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           gap: '10px', marginBottom: '4px',
         }}>
-          {/* Shield icon */}
+          {/* Shield icon / Logo */}
           <div style={{
-            width: '32px', height: '32px', borderRadius: '50%',
-            background: '#f0a500', display: 'flex', alignItems: 'center',
+            width: '34px', height: '34px', borderRadius: '50%',
+            display: 'flex', alignItems: 'center',
             justifyContent: 'center', flexShrink: 0,
+            overflow: 'hidden', border: '1px solid #f0a500'
           }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L3 7v6c0 5.25 3.75 10.1 9 11.25C17.25 23.1 21 18.25 21 13V7L12 2z"
-                fill="#0d1b4b" />
-            </svg>
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+            />
           </div>
           <p style={{
             color: '#f0a500', fontSize: '15px', fontWeight: '900',

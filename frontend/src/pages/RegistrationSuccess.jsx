@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CheckCircle, Download, FileImage, Share2, ArrowLeft } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
+import Footer from '../components/Footer.jsx';
 import IDCard from '../components/IDCard.jsx';
 import { ButtonLoading } from '../components/Loading.jsx';
 import { downloadAsPDF, downloadAsPNG } from '../utils/downloadIdCard.js';
@@ -171,6 +172,7 @@ export default function RegistrationSuccess() {
           </a>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

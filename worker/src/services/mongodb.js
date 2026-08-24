@@ -45,24 +45,38 @@ class D1Cursor {
 }
 
 class D1Collection {
-  constructor(db) { this.db = db; }
+  constructor(db, collectionName) { 
+    this.db = db;
+    this.collectionName = collectionName;
+  }
 
   queryRows(filter = {}, options = {}) {
     const values = [];
     const where = buildWhere(filter, values);
     const projection = options.projection
       ? Object.keys(options.projection).filter((key) => options.projection[key] === 1)
-      : ['uniqueId', 'fullName', 'age', 'mobileNumber', 'bloodGroup', 'city', 'photoUrl', 'photoPublicId', 'createdAt', 'updatedAt'];
-    const columns = projection.length ? projection.join(', ') : '*';
+      : ['*'];
+    
+    // Fallback if someone relied on old defaults for registrations
+    let cols = '*';
+    if (projection.length > 0 && projection[0] !== '*') {
+      cols = projection.join(', ');
+    } else if (this.collectionName === 'registrations' && !options.projection) {
+       cols = 'uniqueId, fullName, age, mobileNumber, bloodGroup, city, photoUrl, photoPublicId, createdAt, updatedAt';
+    }
+
     const sort = options.sort
       ? Object.entries(options.sort).map(([key, direction]) => `${key} ${direction === -1 ? 'DESC' : 'ASC'}`).join(', ')
       : 'createdAt DESC';
-    let sql = `SELECT ${columns} FROM registrations WHERE ${where} ORDER BY ${sort}`;
+    let sql = `SELECT ${cols} FROM ${this.collectionName} WHERE ${where} ORDER BY ${sort}`;
     if (options.skip) sql += ` LIMIT -1 OFFSET ${Number(options.skip)}`;
     if (options.limit) sql += ` LIMIT ${Number(options.limit)}`;
 
     return this.db.prepare(sql).bind(...values).all().then((result) =>
-      (result.results || []).map((row) => ({ ...row, age: Number(row.age) }))
+      (result.results || []).map((row) => {
+        if (row.age !== undefined) row.age = Number(row.age);
+        return row;
+      })
     );
   }
 
@@ -74,34 +88,65 @@ class D1Collection {
   }
 
   async insertOne(document) {
+    const keys = Object.keys(document);
+    const placeholders = keys.map(() => '?').join(', ');
+    const values = keys.map(k => document[k] instanceof Date ? document[k].toISOString() : document[k]);
+    
     return this.db.prepare(`
-      INSERT INTO registrations
-        (uniqueId, fullName, age, mobileNumber, bloodGroup, city, photoUrl, photoPublicId, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).bind(
-      document.uniqueId, document.fullName, document.age, document.mobileNumber,
-      document.bloodGroup, document.city, document.photoUrl, document.photoPublicId,
-      document.createdAt.toISOString(), document.updatedAt.toISOString()
-    ).run();
+      INSERT INTO ${this.collectionName} (${keys.join(', ')})
+      VALUES (${placeholders})
+    `).bind(...values).run();
+  }
+
+  async updateOne(filter, update) {
+    const values = [];
+    const setClause = Object.entries(update.$set || update).map(([key, val]) => {
+      values.push(val instanceof Date ? val.toISOString() : val);
+      return `${key} = ?`;
+    }).join(', ');
+
+    const whereValues = [];
+    const whereClause = buildWhere(filter, whereValues);
+    
+    values.push(...whereValues);
+
+    return this.db.prepare(`
+      UPDATE ${this.collectionName} SET ${setClause} WHERE ${whereClause}
+    `).bind(...values).run();
   }
 
   async deleteOne(filter) {
     const values = [];
     const where = buildWhere(filter, values);
-    return this.db.prepare(`DELETE FROM registrations WHERE ${where}`).bind(...values).run();
+    return this.db.prepare(`DELETE FROM ${this.collectionName} WHERE ${where}`).bind(...values).run();
   }
 
   async countDocuments(filter = {}) {
     const values = [];
     const where = buildWhere(filter, values);
-    const result = await this.db.prepare(`SELECT COUNT(*) AS count FROM registrations WHERE ${where}`).bind(...values).first();
+    const result = await this.db.prepare(`SELECT COUNT(*) AS count FROM ${this.collectionName} WHERE ${where}`).bind(...values).first();
     return Number(result?.count || 0);
+  }
+
+  async aggregate(pipeline) {
+    // Basic support for $group sum for funds
+    if (pipeline.length === 1 && pipeline[0].$group && pipeline[0].$group._id === null) {
+       const sumFields = Object.keys(pipeline[0].$group).filter(k => k !== '_id' && pipeline[0].$group[k].$sum);
+       if (sumFields.length > 0) {
+           const selectParts = sumFields.map(field => `SUM(${pipeline[0].$group[field].$sum.replace('$', '')}) as ${field}`);
+           const result = await this.db.prepare(`SELECT ${selectParts.join(', ')} FROM ${this.collectionName}`).first();
+           const doc = { _id: null };
+           sumFields.forEach(f => doc[f] = result?.[f] || 0);
+           return { toArray: async () => [doc] };
+       }
+    }
+    return { toArray: async () => [] };
   }
 
   async createIndex() { return { success: true }; }
 }
 
-async function getMongoCollection(env) {
+async function getMongoCollection(env, collectionName = null) {
   if (!cachedClient) {
     cachedClient = new MongoClient(env.MONGODB_URI || DEFAULT_URI, {
       serverSelectionTimeoutMS: 15000,
@@ -111,12 +156,12 @@ async function getMongoCollection(env) {
     await cachedClient.connect();
   }
   return cachedClient.db(env.MONGODB_DATABASE || 'unity_a_live_group')
-    .collection(env.MONGODB_COLLECTION || 'registrations');
+    .collection(collectionName || env.MONGODB_COLLECTION || 'registrations');
 }
 
-export async function getCollection(env) {
-  if (env.DB) return new D1Collection(env.DB);
-  return getMongoCollection(env);
+export async function getCollection(env, collectionName = 'registrations') {
+  if (env.DB && !env.DB.isMock) return new D1Collection(env.DB, collectionName);
+  return getMongoCollection(env, collectionName);
 }
 
 export async function ensureIndexes(env) {

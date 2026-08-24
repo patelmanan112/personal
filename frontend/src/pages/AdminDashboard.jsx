@@ -169,9 +169,11 @@ export default function AdminDashboard() {
       <header className="bg-ualg-navy shadow-lg sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-ualg-gold rounded-full flex items-center justify-center">
-              <Shield className="w-4 h-4 text-ualg-navy" />
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="Unity A Live Group Logo" 
+              className="w-8 h-8 rounded-full object-cover border-2 border-ualg-gold flex-shrink-0" 
+            />
             <div>
               <p className="text-white font-black text-sm leading-none">UNITY A LIVE GROUP</p>
               <p className="text-blue-300 text-xs">Admin Management Portal</p>
@@ -234,6 +236,14 @@ export default function AdminDashboard() {
               {galleryTotal}
             </span>
           </button>
+
+          <Link
+            to="/admin/funds"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 transition-all duration-200"
+          >
+            <Shield className="w-4 h-4" />
+            <span>Fund Management</span>
+          </Link>
         </div>
 
         {/* ═══════════════════════════════════════════════════════════════════ */}
@@ -343,64 +353,116 @@ export default function AdminDashboard() {
                     <p>No registrations found.</p>
                   </div>
                 ) : (
-                  <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b border-gray-100">
-                      <tr>
-                        {['Photo', 'Member ID', 'Full Name', 'Age', 'Mobile', 'Blood', 'City', 'Date', ''].map((h) => (
-                          <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-50">
+                  <>
+                    {/* Mobile Cards View */}
+                    <div className="block md:hidden p-4 space-y-4 bg-gray-50/50">
                       {registrations.map((r) => (
-                        <tr key={r.uniqueId} className="hover:bg-blue-50/40 transition-colors">
-                          <td className="px-4 py-3">
+                        <div key={r.uniqueId} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
+                          <div className="flex items-center gap-3 mb-3">
                             <img
                               src={r.photoUrl}
                               alt={r.fullName}
-                              className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                              className="w-12 h-12 rounded-full object-cover border-2 border-gray-100"
                               onError={(e) => { e.target.src = 'https://via.placeholder.com/40?text=?'; }}
                             />
-                          </td>
-                          <td className="px-4 py-3 font-mono text-xs text-ualg-blue font-semibold whitespace-nowrap">
-                            {r.uniqueId}
-                          </td>
-                          <td className="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{r.fullName}</td>
-                          <td className="px-4 py-3 text-gray-600">{r.age}</td>
-                          <td className="px-4 py-3 text-gray-600 font-mono text-xs">{r.mobileNumber}</td>
-                          <td className="px-4 py-3">
-                            <span className="bg-red-50 text-red-600 text-xs font-bold px-2 py-0.5 rounded">
-                              {r.bloodGroup}
+                            <div>
+                              <h3 className="font-bold text-gray-900 text-base">{r.fullName}</h3>
+                              <p className="font-mono text-xs text-ualg-blue font-semibold">{r.uniqueId}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-2 text-sm mb-4">
+                            <div className="text-gray-600">Age: <span className="font-medium text-gray-900">{r.age}</span></div>
+                            <div className="text-gray-600">Blood: <span className="text-red-600 font-bold">{r.bloodGroup}</span></div>
+                            <div className="text-gray-600">City: <span className="font-medium text-gray-900">{r.city}</span></div>
+                            <div className="text-gray-600">Mobile: <span className="font-mono text-xs text-gray-900">{r.mobileNumber}</span></div>
+                          </div>
+                          
+                          <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                            <span className="text-xs text-gray-400">
+                              {new Date(r.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                             </span>
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">{r.city}</td>
-                          <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap">
-                            {new Date(r.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                          </td>
-                          <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <Link
                                 to={`/admin/registration/${r.uniqueId}`}
-                                className="p-1.5 rounded-lg bg-ualg-blue/10 text-ualg-blue hover:bg-ualg-blue hover:text-white transition-colors"
+                                className="p-2 rounded-xl bg-ualg-blue/10 text-ualg-blue hover:bg-ualg-blue hover:text-white transition-colors flex items-center justify-center"
                                 title="View details"
                               >
                                 <Eye className="w-4 h-4" />
                               </Link>
                               <button
                                 onClick={() => setDeleteTarget(r.uniqueId)}
-                                className="p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
+                                className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center"
                                 title="Delete"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
-                          </td>
-                        </tr>
+                          </div>
+                        </div>
                       ))}
-                    </tbody>
-                  </table>
+                    </div>
+
+                    {/* Desktop Table View */}
+                    <table className="hidden md:table w-full text-sm">
+                      <thead className="bg-gray-50 border-b border-gray-100">
+                        <tr>
+                          {['Photo', 'Member ID', 'Full Name', 'Age', 'Mobile', 'Blood', 'City', 'Date', ''].map((h) => (
+                            <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {registrations.map((r) => (
+                          <tr key={r.uniqueId} className="hover:bg-blue-50/40 transition-colors">
+                            <td className="px-4 py-3">
+                              <img
+                                src={r.photoUrl}
+                                alt={r.fullName}
+                                className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                                onError={(e) => { e.target.src = 'https://via.placeholder.com/40?text=?'; }}
+                              />
+                            </td>
+                            <td className="px-4 py-3 font-mono text-xs text-ualg-blue font-semibold whitespace-nowrap">
+                              {r.uniqueId}
+                            </td>
+                            <td className="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{r.fullName}</td>
+                            <td className="px-4 py-3 text-gray-600">{r.age}</td>
+                            <td className="px-4 py-3 text-gray-600 font-mono text-xs">{r.mobileNumber}</td>
+                            <td className="px-4 py-3">
+                              <span className="bg-red-50 text-red-600 text-xs font-bold px-2 py-0.5 rounded">
+                                {r.bloodGroup}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">{r.city}</td>
+                            <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap">
+                              {new Date(r.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <Link
+                                  to={`/admin/registration/${r.uniqueId}`}
+                                  className="p-1.5 rounded-lg bg-ualg-blue/10 text-ualg-blue hover:bg-ualg-blue hover:text-white transition-colors"
+                                  title="View details"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Link>
+                                <button
+                                  onClick={() => setDeleteTarget(r.uniqueId)}
+                                  className="p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
+                                  title="Delete"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
                 )}
               </div>
 

@@ -81,9 +81,14 @@ export default function AdminRegistrationDetails() {
       <header className="bg-ualg-navy shadow-lg sticky top-0 z-10 mb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link to="/admin/dashboard" className="text-blue-300 hover:text-white transition-colors">
+            <Link to="/admin/dashboard" className="text-blue-300 hover:text-white transition-colors mr-1">
               <ArrowLeft className="w-5 h-5" />
             </Link>
+            <img 
+              src="/logo.png" 
+              alt="Unity A Live Group Logo" 
+              className="w-8 h-8 rounded-full object-cover border-2 border-ualg-gold flex-shrink-0" 
+            />
             <div>
               <p className="text-white font-black text-sm leading-none">UNITY A LIVE GROUP</p>
               <p className="text-blue-300 text-xs">Registration Details</p>

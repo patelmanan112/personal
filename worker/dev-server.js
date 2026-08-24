@@ -10,6 +10,7 @@ const mockGalleryStore = [];
 let nextId = 1;
 
 const mockD1 = {
+  isMock: true,
   prepare(sql) {
     let boundParams = [];
     return {
@@ -82,17 +83,23 @@ const env = {
   DB: mockD1,
 };
 
+import { Hono } from 'hono';
+
+const wrapper = new Hono();
+
 // Middleware to inject env into Hono context for Node environment
-app.use('*', async (c, next) => {
+wrapper.use('*', async (c, next) => {
   c.env = { ...env, ...process.env, ...c.env };
   if (!c.env.DB) c.env.DB = mockD1;
   await next();
 });
 
+wrapper.route('/', app);
+
 const port = 8787;
 console.log(`🚀 UNITY A LIVE GROUP API Server running at http://localhost:${port}`);
 
 serve({
-  fetch: app.fetch,
+  fetch: wrapper.fetch,
   port,
 });

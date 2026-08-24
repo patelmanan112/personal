@@ -53,9 +53,11 @@ export default function AdminLogin() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-ualg-gold rounded-full mb-4 shadow-2xl">
-            <Shield className="w-10 h-10 text-ualg-navy" />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="Unity A Live Group Logo" 
+            className="w-20 h-20 rounded-full object-cover border-4 border-ualg-gold shadow-2xl mx-auto mb-4 bg-white" 
+          />
           <h1 className="text-white font-black text-xl tracking-wide">UNITY A LIVE GROUP</h1>
           <p className="text-blue-300 text-sm mt-1 tracking-widest uppercase">Admin Portal</p>
         </div>

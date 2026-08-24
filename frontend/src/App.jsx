@@ -7,6 +7,8 @@ import AdminLogin from './pages/AdminLogin.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import AdminRegistrationDetails from './pages/AdminRegistrationDetails.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import FundsPublic from './pages/FundsPublic.jsx';
+import FundsAdmin from './pages/FundsAdmin.jsx';
 
 export default function App() {
   return (
@@ -20,6 +22,9 @@ export default function App() {
         <Route path="/registration" element={<Navigate to="/register" replace />} />
         <Route path="/registration-success" element={<RegistrationSuccess />} />
         <Route path="/id/:uniqueId" element={<VerifyID />} />
+
+        {/* Funds - Public */}
+        <Route path="/funds" element={<FundsPublic />} />
 
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -36,6 +41,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AdminRegistrationDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/funds"
+          element={
+            <ProtectedRoute>
+              <FundsAdmin />
             </ProtectedRoute>
           }
         />
