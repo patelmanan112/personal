@@ -128,16 +128,20 @@ class D1Collection {
     return Number(result?.count || 0);
   }
 
-  async aggregate(pipeline) {
+  aggregate(pipeline) {
     // Basic support for $group sum for funds
     if (pipeline.length === 1 && pipeline[0].$group && pipeline[0].$group._id === null) {
        const sumFields = Object.keys(pipeline[0].$group).filter(k => k !== '_id' && pipeline[0].$group[k].$sum);
        if (sumFields.length > 0) {
            const selectParts = sumFields.map(field => `SUM(${pipeline[0].$group[field].$sum.replace('$', '')}) as ${field}`);
-           const result = await this.db.prepare(`SELECT ${selectParts.join(', ')} FROM ${this.collectionName}`).first();
-           const doc = { _id: null };
-           sumFields.forEach(f => doc[f] = result?.[f] || 0);
-           return { toArray: async () => [doc] };
+           return {
+               toArray: async () => {
+                   const result = await this.db.prepare(`SELECT ${selectParts.join(', ')} FROM ${this.collectionName}`).first();
+                   const doc = { _id: null };
+                   sumFields.forEach(f => doc[f] = result?.[f] || 0);
+                   return [doc];
+               }
+           };
        }
     }
     return { toArray: async () => [] };

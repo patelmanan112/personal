@@ -40,7 +40,7 @@ funds.get('/summary', async (c) => {
     });
   } catch (err) {
     console.error('Funds summary error:', err);
-    return c.json({ success: false, message: 'Could not fetch funds summary' }, 500);
+    return c.json({ success: false, message: err.message, stack: err.stack }, 500);
   }
 });
 
