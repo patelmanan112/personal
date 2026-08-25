@@ -1,5 +1,5 @@
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // Helper to format currency
 const formatMoney = (amount) => `Rs. ${Number(amount).toLocaleString('en-IN')}`;
@@ -50,7 +50,7 @@ export const generateDaanPDF = (contributions, totalAmount) => {
     c.note || '-'
   ]);
 
-  doc.autoTable({
+  autoTable(doc, {
     startY: 55,
     head: [['Name', 'Amount', 'Date', 'Mode', 'Note']],
     body: tableData,
@@ -59,7 +59,7 @@ export const generateDaanPDF = (contributions, totalAmount) => {
     margin: { top: 55 }
   });
 
-  const finalY = doc.lastAutoTable.finalY || 55;
+  const finalY = doc.lastAutoTable?.finalY || 55;
   
   doc.setFontSize(14);
   doc.setTextColor(0, 0, 0);
@@ -82,7 +82,7 @@ export const generateExpensesPDF = (expenses, totalSpent) => {
     e.description || '-'
   ]);
 
-  doc.autoTable({
+  autoTable(doc, {
     startY: 55,
     head: [['Expense', 'Category', 'Amount', 'Date', 'Paid To', 'Description']],
     body: tableData,
@@ -91,7 +91,7 @@ export const generateExpensesPDF = (expenses, totalSpent) => {
     margin: { top: 55 }
   });
 
-  const finalY = doc.lastAutoTable.finalY || 55;
+  const finalY = doc.lastAutoTable?.finalY || 55;
   
   doc.setFontSize(14);
   doc.setTextColor(0, 0, 0);
@@ -118,7 +118,7 @@ export const generateSummaryPDF = (summary) => {
     ['Fund Utilization', `${spentPercentage}% utilized`]
   ];
 
-  doc.autoTable({
+  autoTable(doc, {
     startY: 55,
     body: tableData,
     theme: 'grid',
