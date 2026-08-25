@@ -129,17 +129,17 @@ export default function FundsAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
             <div className="bg-green-50 border border-green-100 rounded-xl p-6 text-center">
               <p className="text-sm text-green-800 font-semibold mb-1">Total Collection</p>
-              <p className="text-3xl font-black text-green-700">{formatMoney(summary.totalCollected)}</p>
+              <p className="text-2xl sm:text-3xl font-black text-green-700 truncate" title={formatMoney(summary.totalCollected)}>{formatMoney(summary.totalCollected)}</p>
             </div>
             
             <div className="bg-red-50 border border-red-100 rounded-xl p-6 text-center">
               <p className="text-sm text-red-800 font-semibold mb-1">Total Spent</p>
-              <p className="text-3xl font-black text-red-700">{formatMoney(summary.totalSpent)}</p>
+              <p className="text-2xl sm:text-3xl font-black text-red-700 truncate" title={formatMoney(summary.totalSpent)}>{formatMoney(summary.totalSpent)}</p>
             </div>
 
             <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 text-center">
               <p className="text-sm text-blue-800 font-semibold mb-1">Remaining Balance</p>
-              <p className="text-3xl font-black text-blue-700">{formatMoney(summary.remainingBalance)}</p>
+              <p className="text-2xl sm:text-3xl font-black text-blue-700 truncate" title={formatMoney(summary.remainingBalance)}>{formatMoney(summary.remainingBalance)}</p>
             </div>
           </div>
         </div>

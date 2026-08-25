@@ -168,13 +168,13 @@ export default function FundsPublic() {
                   </div>
                   <h3 className="text-emerald-100 font-bold text-xl">Total Daan</h3>
                 </div>
-                <p className="text-5xl lg:text-6xl font-black text-emerald-400 tracking-tighter drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                <p className="text-4xl sm:text-5xl lg:text-6xl font-black text-emerald-400 tracking-tighter drop-shadow-[0_0_10px_rgba(16,185,129,0.3)] truncate" title={formatMoney(summary.totalCollected)}>
                   {formatMoney(summary.totalCollected)}
                 </p>
               </motion.div>
               
               {/* Total Spent */}
-              <motion.div variants={fadeUp} className="bg-gradient-to-br from-rose-900/40 to-rose-950/40 rounded-3xl p-8 border border-rose-500/20 shadow-[0_0_30px_rgba(244,63,94,0.05)] relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
+              <motion.div variants={fadeUp} className="bg-gradient-to-br from-rose-900/40 to-rose-950/40 rounded-3xl p-6 sm:p-8 border border-rose-500/20 shadow-[0_0_30px_rgba(244,63,94,0.05)] relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-rose-500/20 rounded-full blur-3xl group-hover:bg-rose-500/30 transition-colors"></div>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-14 h-14 bg-rose-500/20 border border-rose-500/30 rounded-2xl flex items-center justify-center text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.2)]">
@@ -182,13 +182,13 @@ export default function FundsPublic() {
                   </div>
                   <h3 className="text-rose-100 font-bold text-xl">Total Spent</h3>
                 </div>
-                <p className="text-5xl lg:text-6xl font-black text-rose-400 tracking-tighter drop-shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+                <p className="text-4xl sm:text-5xl lg:text-6xl font-black text-rose-400 tracking-tighter drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] truncate" title={formatMoney(summary.totalSpent)}>
                   {formatMoney(summary.totalSpent)}
                 </p>
               </motion.div>
 
               {/* Balance */}
-              <motion.div variants={fadeUp} className="bg-gradient-to-br from-blue-900/40 to-blue-950/40 rounded-3xl p-8 border border-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.05)] relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
+              <motion.div variants={fadeUp} className="bg-gradient-to-br from-blue-900/40 to-blue-950/40 rounded-3xl p-6 sm:p-8 border border-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.05)] relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl group-hover:bg-blue-500/30 transition-colors"></div>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-14 h-14 bg-blue-500/20 border border-blue-500/30 rounded-2xl flex items-center justify-center text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
@@ -196,7 +196,7 @@ export default function FundsPublic() {
                   </div>
                   <h3 className="text-blue-100 font-bold text-xl">Balance</h3>
                 </div>
-                <p className="text-5xl lg:text-6xl font-black text-blue-400 tracking-tighter drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+                <p className="text-4xl sm:text-5xl lg:text-6xl font-black text-blue-400 tracking-tighter drop-shadow-[0_0_10px_rgba(59,130,246,0.3)] truncate" title={formatMoney(summary.remainingBalance)}>
                   {formatMoney(summary.remainingBalance)}
                 </p>
               </motion.div>
