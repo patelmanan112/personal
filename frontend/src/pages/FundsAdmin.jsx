@@ -63,6 +63,40 @@ export default function FundsAdmin() {
     return <Loading />;
   }
 
+  if (!summary) {
+    return (
+      <div className="min-h-screen bg-gray-50 pb-12 flex flex-col">
+        {/* Topbar */}
+        <header className="bg-ualg-navy shadow-lg sticky top-0 z-10 mb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Link to="/admin/dashboard" className="text-blue-300 hover:text-white transition-colors mr-1">
+                <ArrowLeft className="w-5 h-5" />
+              </Link>
+              <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full border-2 border-ualg-gold bg-white" />
+              <div>
+                <p className="text-white font-black text-sm leading-none">UNITY A LIVE GROUP</p>
+                <p className="text-blue-300 text-xs">Admin Portal</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="max-w-4xl mx-auto px-4 w-full flex-1 flex flex-col items-center justify-center">
+          <div className="bg-white p-8 rounded-2xl shadow-xl border border-red-100 text-center">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">Database Migration Required</h2>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              The Funds database tables are missing on the production server. Please run <code>npm run migrate:remote</code> in the worker directory.
+            </p>
+            <Link to="/admin/dashboard" className="inline-flex items-center gap-2 bg-ualg-navy text-white px-4 py-2 rounded-lg font-medium hover:bg-ualg-blue transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-ualg-cream pb-12">
       <div className="bg-ualg-navy py-8 px-4 text-center relative">

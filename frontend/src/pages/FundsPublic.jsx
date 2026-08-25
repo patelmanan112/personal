@@ -61,6 +61,20 @@ export default function FundsPublic() {
     return <Loading />;
   }
 
+  if (!summary) {
+    return (
+      <div className="min-h-screen bg-[#0a0f1c] font-sans flex flex-col relative text-white items-center justify-center pt-20">
+        <Navbar />
+        <div className="text-center p-8 bg-white/5 rounded-2xl border border-white/10 max-w-lg mt-20">
+          <h2 className="text-2xl font-bold text-rose-400 mb-4">Temporarily Unavailable</h2>
+          <p className="text-gray-300">The funds data could not be loaded. Please ensure the database migrations have been successfully applied.</p>
+        </div>
+        <div className="flex-1"></div>
+        <Footer />
+      </div>
+    );
+  }
+
   const spentPercentage = summary && summary.totalCollected > 0 
     ? ((summary.totalSpent / summary.totalCollected) * 100).toFixed(1)
     : 0;
