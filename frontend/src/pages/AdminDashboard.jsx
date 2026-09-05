@@ -164,7 +164,7 @@ export default function AdminDashboard() {
   if (loading) return <PageLoading />;
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-16">
+    <div className="min-h-screen bg-gray-50 pb-16 overflow-x-hidden">
       {/* ── Topbar ───────────────────────────────────────────────────────── */}
       <header className="bg-ualg-navy shadow-lg sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -202,18 +202,18 @@ export default function AdminDashboard() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ── Tab Switcher ─────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-3 mb-8 border-b border-gray-200 pb-3">
+        <div className="flex flex-wrap items-center gap-2 mb-8 border-b border-gray-200 pb-3">
           <button
             onClick={() => setActiveTab('members')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 ${
+            className={`flex items-center gap-1.5 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
               activeTab === 'members'
                 ? 'bg-ualg-navy text-white shadow-md'
                 : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
             }`}
           >
             <Users className="w-4 h-4" />
-            <span>Member Registrations</span>
-            <span className={`text-xs px-2 py-0.5 rounded-full ${
+            <span>Registrations</span>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full ${
               activeTab === 'members' ? 'bg-ualg-gold text-ualg-navy' : 'bg-gray-100 text-gray-600'
             }`}>
               {pagination.total}
@@ -222,15 +222,15 @@ export default function AdminDashboard() {
 
           <button
             onClick={() => setActiveTab('gallery')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 ${
+            className={`flex items-center gap-1.5 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
               activeTab === 'gallery'
                 ? 'bg-ualg-navy text-white shadow-md'
                 : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
             }`}
           >
             <ImageIcon className="w-4 h-4" />
-            <span>Gallery Management</span>
-            <span className={`text-xs px-2 py-0.5 rounded-full ${
+            <span>Gallery</span>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full ${
               activeTab === 'gallery' ? 'bg-ualg-gold text-ualg-navy' : 'bg-gray-100 text-gray-600'
             }`}>
               {galleryTotal}
@@ -239,10 +239,10 @@ export default function AdminDashboard() {
 
           <Link
             to="/admin/funds"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 transition-all duration-200"
+            className="flex items-center gap-1.5 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 transition-all duration-200"
           >
             <Shield className="w-4 h-4" />
-            <span>Fund Management</span>
+            <span>Funds</span>
           </Link>
         </div>
 
@@ -468,12 +468,12 @@ export default function AdminDashboard() {
 
               {/* Pagination */}
               {pagination.totalPages > 1 && (
-                <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <div className="px-4 sm:px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
                   <p className="text-xs text-gray-400">
                     Showing {(pagination.page - 1) * pagination.limit + 1}–
                     {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
                   </p>
-                  <div className="flex items-center gap-1">
+                  <div className="flex flex-wrap items-center gap-1 justify-center">
                     <button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page <= 1}

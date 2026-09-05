@@ -31,7 +31,13 @@ export default function AdminRegistrationDetails() {
         else setError(res.message || 'Registration not found');
       })
       .catch((err) => {
-        setError(err.response?.data?.message || 'Could not fetch registration details');
+        // 401 is handled by the axios interceptor (redirects to login)
+        if (err.response?.status === 401) return;
+        if (err.response?.status === 404) {
+          setError('Registration not found. The ID may be invalid or deleted.');
+        } else {
+          setError(err.response?.data?.message || 'Could not fetch registration details. Please try again.');
+        }
       })
       .finally(() => setLoading(false));
   }, [uniqueId]);
@@ -126,17 +132,17 @@ export default function AdminRegistrationDetails() {
             </Link>
           </div>
         ) : member ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left Column - Detailed Info & Actions */}
-            <div className="lg:col-span-7 space-y-6">
+            <div className="lg:col-span-7 space-y-5">
               {/* Member Summary Card */}
               <div className="card shadow-md">
-                <div className="flex items-start justify-between border-b border-gray-100 pb-4 mb-6">
-                  <div>
-                    <span className="text-xs font-mono text-ualg-blue bg-blue-50 px-2.5 py-1 rounded-full font-bold">
+                <div className="flex items-start justify-between border-b border-gray-100 pb-4 mb-5 gap-3">
+                  <div className="min-w-0 flex-1">
+                    <span className="text-xs font-mono text-ualg-blue bg-blue-50 px-2.5 py-1 rounded-full font-bold inline-block">
                       {member.uniqueId}
                     </span>
-                    <h1 className="text-2xl font-black text-gray-900 mt-2">{member.fullName}</h1>
+                    <h1 className="text-xl sm:text-2xl font-black text-gray-900 mt-2 break-words">{member.fullName}</h1>
                     <p className="text-xs text-gray-400 mt-1">
                       Registered on {new Date(member.createdAt).toLocaleDateString('en-IN', {
                         day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
@@ -146,11 +152,11 @@ export default function AdminRegistrationDetails() {
                   <img
                     src={member.photoUrl}
                     alt={member.fullName}
-                    className="w-20 h-20 rounded-xl object-cover border-2 border-ualg-gold shadow-md"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border-2 border-ualg-gold shadow-md flex-shrink-0"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <InfoItem icon={<User className="w-4 h-4" />} label="Full Name" value={member.fullName} />
                   <InfoItem icon={<Hash className="w-4 h-4" />} label="Age" value={`${member.age} years`} />
                   <InfoItem icon={<Phone className="w-4 h-4" />} label="Mobile Number" value={member.mobileNumber} />
@@ -167,14 +173,14 @@ export default function AdminRegistrationDetails() {
                   <button
                     onClick={handleDownloadPDF}
                     disabled={downloadingPDF || downloadingPNG}
-                    className="btn-primary flex-1 min-w-[140px] flex items-center justify-center gap-2 text-sm"
+                    className="btn-primary flex-1 min-w-[130px] flex items-center justify-center gap-2 text-sm"
                   >
                     {downloadingPDF ? <ButtonLoading text="PDF..." /> : <><Download className="w-4 h-4" /> Download PDF</>}
                   </button>
                   <button
                     onClick={handleDownloadPNG}
                     disabled={downloadingPDF || downloadingPNG}
-                    className="btn-secondary flex-1 min-w-[140px] flex items-center justify-center gap-2 text-sm"
+                    className="btn-secondary flex-1 min-w-[130px] flex items-center justify-center gap-2 text-sm"
                   >
                     {downloadingPNG ? <ButtonLoading text="PNG..." /> : <><FileImage className="w-4 h-4" /> Download PNG</>}
                   </button>
@@ -191,7 +197,7 @@ export default function AdminRegistrationDetails() {
             {/* Right Column - Digital ID Preview */}
             <div className="lg:col-span-5 flex flex-col items-center">
               <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Digital ID Card Preview</h2>
-              <div className="sticky top-24">
+              <div className="lg:sticky lg:top-24 w-full flex justify-center overflow-x-auto">
                 <IDCard ref={idCardRef} member={member} />
               </div>
             </div>

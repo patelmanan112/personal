@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { fundsService } from '../services/fundsService';
 import { generateDaanPDF, generateExpensesPDF, generateSummaryPDF } from '../utils/pdfGenerator';
 import Loading from '../components/Loading';
-import { Download, Plus, Trash2, Edit2, X, Eye, IndianRupee, PieChart, Users, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Download, Plus, Trash2, X, PieChart, Users, ArrowLeft } from 'lucide-react';
 
 const formatMoney = (amount) => `₹${Number(amount).toLocaleString('en-IN')}`;
 
@@ -98,87 +99,107 @@ export default function FundsAdmin() {
   }
 
   return (
-    <div className="min-h-screen bg-ualg-cream pb-12">
-      <div className="bg-ualg-navy py-8 px-4 text-center relative">
-        <h1 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">Admin Fund Management</h1>
-        <p className="text-ualg-gold font-medium">Control Center for Financial Tracking</p>
+    <div className="min-h-screen bg-ualg-cream pb-12 overflow-x-hidden">
+      {/* Topbar */}
+      <header className="bg-ualg-navy shadow-lg sticky top-0 z-10 mb-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0">
+            <Link to="/admin/dashboard" className="text-blue-300 hover:text-white transition-colors mr-1 flex-shrink-0">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full border-2 border-ualg-gold bg-white flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-white font-black text-sm leading-none truncate">UNITY A LIVE GROUP</p>
+              <p className="text-blue-300 text-xs">Fund Management</p>
+            </div>
+          </div>
+          <Link to="/admin/dashboard" className="text-xs text-blue-300 hover:text-white transition-colors flex-shrink-0">
+            Dashboard
+          </Link>
+        </div>
+      </header>
+
+      <div className="bg-ualg-navy py-6 px-4 text-center">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-1 tracking-tight">Fund Management</h1>
+        <p className="text-ualg-gold font-medium text-sm">Control Center for Financial Tracking</p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6">
         
         {/* SUMMARY SECTION */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-gray-100">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4">
-            <h2 className="text-2xl font-bold text-ualg-navy flex items-center gap-2">
-              <PieChart className="w-6 h-6 text-ualg-gold" />
+        <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-6 border border-gray-100">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 border-b pb-4 gap-3">
+            <h2 className="text-xl font-bold text-ualg-navy flex items-center gap-2">
+              <PieChart className="w-5 h-5 text-ualg-gold flex-shrink-0" />
               Fund Summary
             </h2>
-            <div className="flex flex-wrap gap-2 mt-4 md:mt-0 w-full md:w-auto">
-              <button onClick={() => generateDaanPDF(contributions, summary.totalCollected)} className="flex-1 md:flex-none justify-center bg-gray-100 text-gray-700 px-3 py-2 rounded text-sm hover:bg-gray-200">
+            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+              <button onClick={() => generateDaanPDF(contributions, summary.totalCollected)} className="flex-1 sm:flex-none justify-center bg-gray-100 text-gray-700 px-3 py-2 rounded text-xs sm:text-sm hover:bg-gray-200">
                 Daan PDF
               </button>
-              <button onClick={() => generateExpensesPDF(expenses, summary.totalSpent)} className="flex-1 md:flex-none justify-center bg-gray-100 text-gray-700 px-3 py-2 rounded text-sm hover:bg-gray-200">
+              <button onClick={() => generateExpensesPDF(expenses, summary.totalSpent)} className="flex-1 sm:flex-none justify-center bg-gray-100 text-gray-700 px-3 py-2 rounded text-xs sm:text-sm hover:bg-gray-200">
                 Expenses PDF
               </button>
-              <button onClick={() => generateSummaryPDF(summary)} className="flex-1 md:flex-none justify-center bg-ualg-navy text-white px-4 py-2 rounded hover:bg-ualg-blue transition-colors text-sm font-medium flex items-center gap-2">
-                <Download className="w-4 h-4"/> Summary PDF
+              <button onClick={() => generateSummaryPDF(summary)} className="flex-1 sm:flex-none justify-center bg-ualg-navy text-white px-3 py-2 rounded hover:bg-ualg-blue transition-colors text-xs sm:text-sm font-medium flex items-center gap-1">
+                <Download className="w-4 h-4 flex-shrink-0"/> Summary PDF
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-            <div className="bg-green-50 border border-green-100 rounded-xl p-6 text-center">
-              <p className="text-sm text-green-800 font-semibold mb-1">Total Collection</p>
-              <p className="text-2xl sm:text-3xl font-black text-green-700 truncate" title={formatMoney(summary.totalCollected)}>{formatMoney(summary.totalCollected)}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-center">
+              <p className="text-xs sm:text-sm text-green-800 font-semibold mb-1">Total Collection</p>
+              <p className="text-lg sm:text-xl font-black text-green-700 break-all leading-tight">{formatMoney(summary.totalCollected)}</p>
             </div>
             
-            <div className="bg-red-50 border border-red-100 rounded-xl p-6 text-center">
-              <p className="text-sm text-red-800 font-semibold mb-1">Total Spent</p>
-              <p className="text-2xl sm:text-3xl font-black text-red-700 truncate" title={formatMoney(summary.totalSpent)}>{formatMoney(summary.totalSpent)}</p>
+            <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center">
+              <p className="text-xs sm:text-sm text-red-800 font-semibold mb-1">Total Spent</p>
+              <p className="text-lg sm:text-xl font-black text-red-700 break-all leading-tight">{formatMoney(summary.totalSpent)}</p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 text-center">
-              <p className="text-sm text-blue-800 font-semibold mb-1">Remaining Balance</p>
-              <p className="text-2xl sm:text-3xl font-black text-blue-700 truncate" title={formatMoney(summary.remainingBalance)}>{formatMoney(summary.remainingBalance)}</p>
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
+              <p className="text-xs sm:text-sm text-blue-800 font-semibold mb-1">Remaining Balance</p>
+              <p className="text-lg sm:text-xl font-black text-blue-700 break-all leading-tight">{formatMoney(summary.remainingBalance)}</p>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           
           {/* DAAN SECTION */}
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col h-[700px]">
-            <div className="p-6 border-b border-gray-100 flex-shrink-0 flex justify-between items-center">
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col">
+            <div className="p-4 sm:p-5 border-b border-gray-100 flex justify-between items-center">
               <div>
-                <h2 className="text-xl font-bold text-ualg-navy flex items-center gap-2">
-                  <Users className="w-5 h-5 text-green-600" />
+                <h2 className="text-base sm:text-lg font-bold text-ualg-navy flex items-center gap-2">
+                  <Users className="w-4 h-4 text-green-600 flex-shrink-0" />
                   Contributions
                 </h2>
+                <p className="text-xs text-gray-400 mt-0.5">{contributions.length} entries</p>
               </div>
               <button 
                 onClick={() => setShowAddContribution(true)}
-                className="flex items-center gap-1 bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 transition-colors text-sm font-medium"
+                className="flex items-center gap-1 bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 transition-colors text-sm font-medium flex-shrink-0"
               >
                 <Plus className="w-4 h-4" /> Add
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50/50 space-y-3">
+            <div className="overflow-y-auto max-h-96 lg:max-h-[500px] p-3 sm:p-4 bg-gray-50/50 space-y-2">
               {contributions.length === 0 ? (
-                <div className="text-center text-gray-500 py-10">No contributions found.</div>
+                <div className="text-center text-gray-500 py-10 text-sm">No contributions found.</div>
               ) : (
                 contributions.map(c => (
-                  <div key={c.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
-                    <div>
-                      <h4 className="font-bold text-gray-800">{c.contributorName}</h4>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {new Date(c.date).toLocaleDateString()} • {c.paymentMode}
+                  <div key={c.id} className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center gap-2">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-bold text-gray-800 text-sm truncate">{c.contributorName}</h4>
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        {new Date(c.date).toLocaleDateString('en-IN')} • {c.paymentMode}
                       </div>
                       {c.imageUrl && <a href={c.imageUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline">View Proof</a>}
                     </div>
-                    <div className="text-right flex items-center gap-4">
-                      <span className="font-black text-green-700 text-lg">{formatMoney(c.amount)}</span>
-                      <button onClick={() => handleDeleteContribution(c.id)} className="text-red-500 hover:text-red-700 p-1">
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="font-black text-green-700 text-sm sm:text-base whitespace-nowrap">{formatMoney(c.amount)}</span>
+                      <button onClick={() => handleDeleteContribution(c.id)} className="text-red-500 hover:text-red-700 p-1 flex-shrink-0">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -189,39 +210,40 @@ export default function FundsAdmin() {
           </div>
 
           {/* EXPENSES SECTION */}
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col h-[700px]">
-            <div className="p-6 border-b border-gray-100 flex-shrink-0 flex justify-between items-center">
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col">
+            <div className="p-4 sm:p-5 border-b border-gray-100 flex justify-between items-center">
               <div>
-                <h2 className="text-xl font-bold text-ualg-navy flex items-center gap-2">
-                  <PieChart className="w-5 h-5 text-red-600" />
+                <h2 className="text-base sm:text-lg font-bold text-ualg-navy flex items-center gap-2">
+                  <PieChart className="w-4 h-4 text-red-600 flex-shrink-0" />
                   Expenses
                 </h2>
+                <p className="text-xs text-gray-400 mt-0.5">{expenses.length} entries</p>
               </div>
               <button 
                 onClick={() => setShowAddExpense(true)}
-                className="flex items-center gap-1 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors text-sm font-medium"
+                className="flex items-center gap-1 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors text-sm font-medium flex-shrink-0"
               >
                 <Plus className="w-4 h-4" /> Add
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50/50 space-y-3">
+            <div className="overflow-y-auto max-h-96 lg:max-h-[500px] p-3 sm:p-4 bg-gray-50/50 space-y-2">
               {expenses.length === 0 ? (
-                <div className="text-center text-gray-500 py-10">No expenses recorded yet.</div>
+                <div className="text-center text-gray-500 py-10 text-sm">No expenses recorded yet.</div>
               ) : (
                 expenses.map(e => (
-                  <div key={e.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
-                    <div>
-                      <h4 className="font-bold text-gray-800">{e.expenseName}</h4>
-                      <div className="text-xs text-gray-500 mt-1">
-                        <span className="px-2 py-0.5 bg-gray-100 rounded-full mr-1">{e.category}</span>
-                        {new Date(e.date).toLocaleDateString()}
+                  <div key={e.id} className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center gap-2">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-bold text-gray-800 text-sm truncate">{e.expenseName}</h4>
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        <span className="px-1.5 py-0.5 bg-gray-100 rounded-full mr-1">{e.category}</span>
+                        {new Date(e.date).toLocaleDateString('en-IN')}
                       </div>
                       {e.receiptUrl && <a href={e.receiptUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline">View Receipt</a>}
                     </div>
-                    <div className="text-right flex items-center gap-4">
-                      <span className="font-black text-red-700 text-lg">{formatMoney(e.amount)}</span>
-                      <button onClick={() => handleDeleteExpense(e.id)} className="text-red-500 hover:text-red-700 p-1">
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="font-black text-red-700 text-sm sm:text-base whitespace-nowrap">{formatMoney(e.amount)}</span>
+                      <button onClick={() => handleDeleteExpense(e.id)} className="text-red-500 hover:text-red-700 p-1 flex-shrink-0">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
