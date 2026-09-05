@@ -69,8 +69,14 @@ class D1Collection {
       ? Object.entries(options.sort).map(([key, direction]) => `${key} ${direction === -1 ? 'DESC' : 'ASC'}`).join(', ')
       : 'createdAt DESC';
     let sql = `SELECT ${cols} FROM ${this.collectionName} WHERE ${where} ORDER BY ${sort}`;
-    if (options.skip) sql += ` LIMIT -1 OFFSET ${Number(options.skip)}`;
-    if (options.limit) sql += ` LIMIT ${Number(options.limit)}`;
+    if (options.limit !== undefined || options.skip !== undefined) {
+      const limitVal = options.limit !== undefined ? Number(options.limit) : -1;
+      const offsetVal = options.skip !== undefined ? Number(options.skip) : 0;
+      sql += ` LIMIT ${limitVal}`;
+      if (offsetVal > 0) {
+        sql += ` OFFSET ${offsetVal}`;
+      }
+    }
 
     return this.db.prepare(sql).bind(...values).all().then((result) =>
       (result.results || []).map((row) => {

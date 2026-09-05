@@ -73,9 +73,11 @@ export default function AdminDashboard() {
       if (res.success) {
         setRegistrations(res.data);
         setPagination(res.pagination);
+      } else {
+        setError(res.message || 'Failed to load registrations. Please try again.');
       }
-    } catch {
-      setError('Failed to load registrations. Please try again.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to load registrations. Please try again.');
     } finally {
       setTableLoading(false);
     }
